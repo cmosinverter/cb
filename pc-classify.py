@@ -178,7 +178,6 @@ data['M'] = data['M'].round(0).astype('int')
 data['FL'] = data['FL'].round(0).astype('int')
 data['NEWL-FL'] = data['NEWL-FL'].round(0).astype('int')
 data['TD'] = np.digitize(data['TD'], bins=np.arange(150000, 600000, 50000))
-data
 
 
 # Train Test Split
