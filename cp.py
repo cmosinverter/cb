@@ -33,7 +33,7 @@ def process(pc_path, os_path, split_cp = None):
         pc['EQP'] = pc['EQP'].apply(lambda x: int(x.split('-')[1]))
         pc = pc.sort_values(by='最後修改時間')
         pc = pc.loc[pc['最後修改者'] == 'EDA']
-        pc.index = list(range(len(pc)))
+        pc.index = list(range(len(pc))) 
         pc['Process'] = np.nan
         for i in range(len(pc)):
             try:
@@ -42,9 +42,12 @@ def process(pc_path, os_path, split_cp = None):
                 pass
         pc.fillna('ffill', inplace=True)
 
-        if split_cp:
+        if split_cp[:2] == 'CP':
             pc = pc.loc[pc['Process'] == split_cp]
             pc.index = list(range(len(pc)))
+        else:
+            pc.index = list(range(len(pc)))
+            pass
 
         # Find test range
         tip_change_idx = pc[pc['Tip Length'].diff() != 0].index.tolist()
@@ -86,8 +89,10 @@ def process(pc_path, os_path, split_cp = None):
     # 打開 O/S 資料
     osr = pd.read_excel(os_path[0], usecols=['RES_OCCUPY', 'OS Rate', 'PROCESS_ID'])
 
-    if split_cp:
+    if split_cp[:2] == 'CP':
         osr = osr.loc[osr['PROCESS_ID'] == split_cp]
+    else:
+        pass
 
     oss = osr[['RES_OCCUPY', 'OS Rate']].groupby('RES_OCCUPY').mean()
     oss.index = list(map(lambda x: int(x.split('-')[1]), oss.index)) # type: ignore

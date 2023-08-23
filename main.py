@@ -18,7 +18,7 @@ class Tool():
 
         self.window = tk.Tk()
         self.window.title('針耗視覺化工具')
-        self.window.geometry('300x300')
+        self.window.geometry('300x280')
         self.window.resizable(False, False)
 
         # Load byte data
@@ -29,20 +29,20 @@ class Tool():
         img = ImageTk.PhotoImage(image)
         
         panel = Label(self.window, image = img)
-        panel.grid(column=0, row=0, columnspan=2, padx=10)
+        panel.grid(column=0, row=0, columnspan=2, padx=25)
 
 
         self.pc_file_select = tk.Button(text="P/C檔案選擇", command= lambda: self.file_select('pc'))
-        self.pc_file_select.grid(column=0, row=1, sticky=tk.E, padx=10, pady=10)
+        self.pc_file_select.grid(column=0, row=1, padx=0, pady=10)
 
         self.os_file_select = tk.Button(text="O/S檔案選擇", command = lambda: self.file_select('os'))
-        self.os_file_select.grid(column=0, row=2, sticky=tk.E, padx=10, pady=10)
+        self.os_file_select.grid(column=0, row=2, padx=0, pady=10)
 
         self.analyze = tk.Button(text='分析CP類別', command = lambda: self.get_cp_list())
         self.analyze.grid(column=1, row=1)
 
         self.process = tk.Button(text='Start Calculation', command = lambda: process(self.pc_path, self.os_path, self.value.get()))
-        self.process.grid(column=0, row=3, padx=20, pady=20, columnspan=2)
+        self.process.grid(column=0, row=3, padx=15, pady=20, columnspan=2)
 
         # CP 選單
         self.value = tk.StringVar()
