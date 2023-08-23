@@ -11,7 +11,6 @@ def process(pc_path, os_path, split_cp = None):
     osr['DATET_STOP'] = osr['DATET_STOP'].apply(lambda x: x[:13].replace('/', '-'))
     osr = osr.sort_values(by = 'DATET_STOP')
     osr = osr.loc[osr['TOOL_ID'] == 'JB1UJS07', ['PROCESS_ID', 'DATET_STOP']]
-    osr.to_csv('os.csv')
     cp_dict = {k: v for k, v in zip(osr['DATET_STOP'].values, osr['PROCESS_ID'].values)}
     cp_menu = osr['PROCESS_ID'].value_counts().index.values
     
