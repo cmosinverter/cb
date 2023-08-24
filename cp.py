@@ -7,12 +7,13 @@ import os
 
 def process(pc_path, os_path, split_cp = None):
     print('Current CP:', split_cp)
-    osr = pd.read_excel(os_path[0], usecols=['TOOL_ID', 'PROCESS_ID', 'DATET_STOP'])
+    try:
+        osr = pd.read_excel(os_path[0], usecols=['TOOL_ID', 'PROCESS_ID', 'DATET_STOP'])
+    except:
+        osr = pd.read_excel(os_path[0], usecols=['TOOL_ID', 'PROCESS_ID', 'DATET_STOP'], skiprows=list(range(5)))
+
     osr['DATET_STOP'] = osr['DATET_STOP'].apply(lambda x: x[:13].replace('/', '-'))
     osr = osr.sort_values(by = 'DATET_STOP')
-    osr = osr.loc[osr['TOOL_ID'] == 'JB1UJS07', ['PROCESS_ID', 'DATET_STOP']]
-    cp_dict = {k: v for k, v in zip(osr['DATET_STOP'].values, osr['PROCESS_ID'].values)}
-    cp_menu = osr['PROCESS_ID'].value_counts().index.values
     
     # find equipment list
     usecols = ['EQP']
@@ -34,12 +35,16 @@ def process(pc_path, os_path, split_cp = None):
         pc = pc.loc[pc['最後修改者'] == 'EDA']
         pc.index = list(range(len(pc))) 
         pc['Process'] = np.nan
+        tool_id = p.split('/')[-1].split('.')[0]
+        cp_dict = {k: v for k, v in zip(osr['DATET_STOP'].values, osr.loc[osr['TOOL_ID'] == tool_id, 'PROCESS_ID'].values)}
+
         for i in range(len(pc)):
             try:
                 pc.iloc[i, 5] = cp_dict[str(pc.iloc[i, 4])[:13]]
             except:
                 pass
-        pc.fillna('ffill', inplace=True)
+        pc.fillna(method = 'ffill', inplace=True)
+
 
         if split_cp[:2] == 'CP':
             pc = pc.loc[pc['Process'] == split_cp]
@@ -86,7 +91,10 @@ def process(pc_path, os_path, split_cp = None):
     result = result.drop('EQP', axis=1)
 
     # 打開 O/S 資料
-    osr = pd.read_excel(os_path[0], usecols=['RES_OCCUPY', 'OS Rate', 'PROCESS_ID'])
+    try:
+        osr = pd.read_excel(os_path[0], usecols=['RES_OCCUPY', 'OS Rate', 'PROCESS_ID'])
+    except:
+        osr = pd.read_excel(os_path[0], usecols=['RES_OCCUPY', 'OS Rate', 'PROCESS_ID'], skiprows=list(range(5)))
 
     if split_cp[:2] == 'CP':
         osr = osr.loc[osr['PROCESS_ID'] == split_cp]

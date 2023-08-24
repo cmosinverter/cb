@@ -62,10 +62,10 @@ class Tool():
             self.os_path = file_path
 
     def get_cp_list(self):
-        osr = pd.read_excel(self.os_path[0], usecols=['TOOL_ID', 'PROCESS_ID', 'DATET_STOP'])
-        osr['DATET_STOP'] = osr['DATET_STOP'].apply(lambda x: x[:13].replace('/', '-'))
-        osr = osr.sort_values(by = 'DATET_STOP')
-        osr = osr.loc[osr['TOOL_ID'] == 'JB1UJS07', ['PROCESS_ID', 'DATET_STOP']]
+        try:
+            osr = pd.read_excel(self.os_path[0], usecols=['PROCESS_ID'], skiprows=list(range(5)))
+        except:
+            osr = pd.read_excel(self.os_path[0], usecols=['PROCESS_ID'])
         self.cp_list = osr['PROCESS_ID'].value_counts().index.values
         menu = self.om["menu"]
         menu.delete(0, "end")
