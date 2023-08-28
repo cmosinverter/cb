@@ -69,14 +69,14 @@ def process(pc_path, os_path, split_cp = None):
 
         for r in test_ranges:
             coef = [0]*len(eqp_list)
-            tip_loss = pc.loc[r[0], 'Tip Length'] - pc.loc[r[1], 'Tip Length'] # type: ignore
+            tip_loss = pc.loc[r[0], 'Tip Length'] - pc.loc[r[1], 'Tip Length']
             eqp_split_idx = eqp_change_idx[(eqp_change_idx < r[1]) & (eqp_change_idx > r[0])]
             eqp_split_idx = [r[0]] + list(eqp_split_idx) + [r[1]]
             eqp_split_ranges = list(zip(eqp_split_idx, [x-1 for x in eqp_split_idx[1:]]))
             eqp_split_ranges.insert(0, (r[0], eqp_split_idx[0]-1))
             eqp_split_ranges.append((eqp_split_idx[-1], r[1]))
             for e in eqp_split_ranges:
-                coef[eqp_dict[pc.loc[e[0], 'EQP']]] = pc.loc[e[1], '總累積使用Die數'] - pc.loc[e[0], '總累積使用Die數'] # type: ignore
+                coef[eqp_dict[pc.loc[e[0], 'EQP']]] = pc.loc[e[1], '總累積使用Die數'] - pc.loc[e[0], '總累積使用Die數']
             A.append(coef)
             b.append([tip_loss])
     A = np.array(A)
